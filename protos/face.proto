@@ -1,0 +1,33 @@
+syntax = "proto3";
+
+service Face {
+    rpc Comparison(ComparisonRequest) returns (ComparisonRespons){}
+    rpc Find(FindRequest) returns (FindRespons) {}
+}
+
+message ComparisonRequest {
+    oneof Comparison_oneof {
+        Metadata originalMetadata = 1;
+        bytes originalImage = 2;
+        Metadata forCheck = 3;
+        bytes forCheckImage = 4;
+    }
+}
+message ComparisonRespons {
+    bool coincidences = 1;
+}
+
+message FindRequest {
+    oneof Find_oneof {
+        Metadata metadata = 1;
+        bytes image = 2;
+    }
+}
+message FindRespons {
+    int32 total = 1;
+}
+
+message Metadata{
+    string filename = 1;
+    string extension = 2;
+}
