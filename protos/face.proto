@@ -1,12 +1,14 @@
 syntax = "proto3";
 
+option go_package = ".;pb";
+
 service Face {
-    rpc Comparison(ComparisonRequest) returns (ComparisonRespons){}
-    rpc Find(FindRequest) returns (FindRespons) {}
+    rpc Comparison(stream ComparisonRequest) returns (ComparisonRespons){}
+    rpc Find(stream FindRequest) returns (FindRespons) {}
 }
 
 message ComparisonRequest {
-    oneof Comparison_oneof {
+    oneof ComparisonData {
         Metadata originalMetadata = 1;
         bytes originalImage = 2;
         Metadata forCheck = 3;
@@ -18,7 +20,7 @@ message ComparisonRespons {
 }
 
 message FindRequest {
-    oneof Find_oneof {
+    oneof FindData {
         Metadata metadata = 1;
         bytes image = 2;
     }

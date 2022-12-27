@@ -13,23 +13,24 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\nface.proto\"\xa7\x01\n\x11\x43omparisonRequest\x12%\n\x10originalMetadata\x18\x01 \x01(\x0b\x32\t.MetadataH\x00\x12\x17\n\roriginalImage\x18\x02 \x01(\x0cH\x00\x12%\n\x10\x66orCheckMetadata\x18\x03 \x01(\x0b\x32\t.MetadataH\x00\x12\x17\n\rforCheckImage\x18\x04 \x01(\x0cH\x00\x42\x12\n\x10\x43omparison_oneof\")\n\x11\x43omparisonRespons\x12\x14\n\x0c\x63oincidences\x18\x01 \x01(\x08\"K\n\x0b\x46indRequest\x12\x1d\n\x08metadata\x18\x01 \x01(\x0b\x32\t.MetadataH\x00\x12\x0f\n\x05image\x18\x02 \x01(\x0cH\x00\x42\x0c\n\nFind_oneof\"/\n\x08Metadata\x12\x10\n\x08\x66ilename\x18\x01 \x01(\t\x12\x11\n\textension\x18\x02 \x01(\t\"\x1c\n\x0b\x46indRespons\x12\r\n\x05total\x18\x01 \x01(\x05\x32\x64\n\x04\x46\x61\x63\x65\x12\x36\n\nComparison\x12\x12.ComparisonRequest\x1a\x12.ComparisonRespons\"\x00\x12$\n\x04\x46ind\x12\x0c.FindRequest\x1a\x0c.FindRespons\"\x00\x62\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\nface.proto\"\x9d\x01\n\x11\x43omparisonRequest\x12%\n\x10originalMetadata\x18\x01 \x01(\x0b\x32\t.MetadataH\x00\x12\x17\n\roriginalImage\x18\x02 \x01(\x0cH\x00\x12\x1d\n\x08\x66orCheck\x18\x03 \x01(\x0b\x32\t.MetadataH\x00\x12\x17\n\rforCheckImage\x18\x04 \x01(\x0cH\x00\x42\x10\n\x0e\x43omparisonData\")\n\x11\x43omparisonRespons\x12\x14\n\x0c\x63oincidences\x18\x01 \x01(\x08\"I\n\x0b\x46indRequest\x12\x1d\n\x08metadata\x18\x01 \x01(\x0b\x32\t.MetadataH\x00\x12\x0f\n\x05image\x18\x02 \x01(\x0cH\x00\x42\n\n\x08\x46indData\"\x1c\n\x0b\x46indRespons\x12\r\n\x05total\x18\x01 \x01(\x05\"/\n\x08Metadata\x12\x10\n\x08\x66ilename\x18\x01 \x01(\t\x12\x11\n\textension\x18\x02 \x01(\t2h\n\x04\x46\x61\x63\x65\x12\x38\n\nComparison\x12\x12.ComparisonRequest\x1a\x12.ComparisonRespons\"\x00(\x01\x12&\n\x04\x46ind\x12\x0c.FindRequest\x1a\x0c.FindRespons\"\x00(\x01\x42\x06Z\x04.;pbb\x06proto3')
 
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, globals())
 _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'face_pb2', globals())
 if _descriptor._USE_C_DESCRIPTORS == False:
 
   DESCRIPTOR._options = None
+  DESCRIPTOR._serialized_options = b'Z\004.;pb'
   _COMPARISONREQUEST._serialized_start=15
-  _COMPARISONREQUEST._serialized_end=182
-  _COMPARISONRESPONS._serialized_start=184
-  _COMPARISONRESPONS._serialized_end=225
-  _FINDREQUEST._serialized_start=227
-  _FINDREQUEST._serialized_end=302
-  _METADATA._serialized_start=304
-  _METADATA._serialized_end=351
-  _FINDRESPONS._serialized_start=353
-  _FINDRESPONS._serialized_end=381
-  _FACE._serialized_start=383
-  _FACE._serialized_end=483
+  _COMPARISONREQUEST._serialized_end=172
+  _COMPARISONRESPONS._serialized_start=174
+  _COMPARISONRESPONS._serialized_end=215
+  _FINDREQUEST._serialized_start=217
+  _FINDREQUEST._serialized_end=290
+  _FINDRESPONS._serialized_start=292
+  _FINDRESPONS._serialized_end=320
+  _METADATA._serialized_start=322
+  _METADATA._serialized_end=369
+  _FACE._serialized_start=371
+  _FACE._serialized_end=475
 # @@protoc_insertion_point(module_scope)

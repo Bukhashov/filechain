@@ -4,7 +4,9 @@ import (
 	"net/http"
 	"github.com/Bukhashov/filechain/internal/config"
 	"github.com/Bukhashov/filechain/pkg/logging"
+	"github.com/Bukhashov/filechain/pkg/pb"
 	"github.com/jackc/pgx/v5/pgxpool"
+	"google.golang.org/grpc"
 )
 
 type User interface{
@@ -15,6 +17,7 @@ type User interface{
 
 type user struct {
 	client 	*pgxpool.Pool
+	service	pb.FaceClient
 	logger	*logging.Logger
 	config	config.Config
 	ID 		string `json:"id"`
@@ -23,9 +26,10 @@ type user struct {
 	Dto		Dto
 }
 
-func NewUser(client *pgxpool.Pool, config config.Config, logger *logging.Logger) User { 
+func NewUser(client *pgxpool.Pool, cc *grpc.ClientConn, config config.Config, logger *logging.Logger) User { 
 	return &user{
 		config: config,
+		service: pb.NewFaceClient(cc),
 		logger: logger,
 		client: client,
 	}

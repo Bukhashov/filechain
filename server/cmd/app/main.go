@@ -12,7 +12,8 @@ import (
 	"github.com/Bukhashov/filechain/pkg/logging"
 
 	"github.com/jackc/pgx/v5/pgxpool"
-	
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials/insecure"
 )
 
 const (
@@ -35,7 +36,12 @@ func main(){
 }
 
 func RunRESTServer(status chan int, client *pgxpool.Pool, cfg config.Config, logger *logging.Logger) {
-	u := user.NewUser(client, cfg, logger)
+	fmt.Print("Run server")
+	gRPCConn, err := grpc.Dial(":5050", grpc.WithTransportCredentials(insecure.NewCredentials())); if err != nil {
+		fmt.Print(err);
+	} 
+	
+	u := user.NewUser(client, gRPCConn, cfg, logger)
 	http.HandleFunc(API_PATH+"/user/singup", u.Singup)
 	http.HandleFunc(API_PATH+"/user/singin", u.Singin)
 	http.HandleFunc(API_PATH+"/user/delete", u.Delete)
@@ -46,10 +52,11 @@ func RunRESTServer(status chan int, client *pgxpool.Pool, cfg config.Config, log
 	http.HandleFunc(API_PATH+"/get/all/block", b.All)
 	http.HandleFunc(API_PATH+"/update/block", b.Update)
 	
-	err := http.ListenAndServe(fmt.Sprintf(":%s", cfg.Lesten.Port), nil); if err != nil {
+	err = http.ListenAndServe(fmt.Sprintf(":%s", cfg.Lesten.Port), nil); if err != nil {
 		close(status)
 		return
 	}
+	
 }
 
 func RunGRPCServer(status chan int) {

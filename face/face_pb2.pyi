@@ -5,16 +5,16 @@ from typing import ClassVar as _ClassVar, Mapping as _Mapping, Optional as _Opti
 DESCRIPTOR: _descriptor.FileDescriptor
 
 class ComparisonRequest(_message.Message):
-    __slots__ = ["forCheckImage", "forCheckMetadata", "originalImage", "originalMetadata"]
+    __slots__ = ["forCheck", "forCheckImage", "originalImage", "originalMetadata"]
     FORCHECKIMAGE_FIELD_NUMBER: _ClassVar[int]
-    FORCHECKMETADATA_FIELD_NUMBER: _ClassVar[int]
+    FORCHECK_FIELD_NUMBER: _ClassVar[int]
     ORIGINALIMAGE_FIELD_NUMBER: _ClassVar[int]
     ORIGINALMETADATA_FIELD_NUMBER: _ClassVar[int]
+    forCheck: Metadata
     forCheckImage: bytes
-    forCheckMetadata: Metadata
     originalImage: bytes
     originalMetadata: Metadata
-    def __init__(self, originalMetadata: _Optional[_Union[Metadata, _Mapping]] = ..., originalImage: _Optional[bytes] = ..., forCheckMetadata: _Optional[_Union[Metadata, _Mapping]] = ..., forCheckImage: _Optional[bytes] = ...) -> None: ...
+    def __init__(self, originalMetadata: _Optional[_Union[Metadata, _Mapping]] = ..., originalImage: _Optional[bytes] = ..., forCheck: _Optional[_Union[Metadata, _Mapping]] = ..., forCheckImage: _Optional[bytes] = ...) -> None: ...
 
 class ComparisonRespons(_message.Message):
     __slots__ = ["coincidences"]

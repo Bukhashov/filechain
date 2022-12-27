@@ -7,8 +7,7 @@ from concurrent import futures
 
 ### tmp file ға сақтауды жасауды істеу керек
 def get_pathfile(filename, extension):
-    return f'tmp/{filename}{extension}'
-
+    return f'{filename}{extension}'
 
 class Face(face_pb2_grpc.FaceServicer):
     def Find(self, request_iterator, context):
@@ -27,9 +26,9 @@ class Face(face_pb2_grpc.FaceServicer):
         face_img = face_recognition.load_image_file(filepath)
         faceArr = face_recognition.face_locations(face_img)
         
-        os.remove(filepath)
-
-        return face_pb2.FindRespons(len(faceArr))
+        # os.remove(filepath)
+        print(faceArr)
+        return face_pb2.FindRespons(total=len(faceArr))
 
     def Comparison(self, request_iterator, context):
         data_original = bytearray()

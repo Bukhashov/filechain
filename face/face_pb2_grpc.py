@@ -14,12 +14,12 @@ class FaceStub(object):
         Args:
             channel: A grpc.Channel.
         """
-        self.Comparison = channel.unary_unary(
+        self.Comparison = channel.stream_unary(
                 '/Face/Comparison',
                 request_serializer=face__pb2.ComparisonRequest.SerializeToString,
                 response_deserializer=face__pb2.ComparisonRespons.FromString,
                 )
-        self.Find = channel.unary_unary(
+        self.Find = channel.stream_unary(
                 '/Face/Find',
                 request_serializer=face__pb2.FindRequest.SerializeToString,
                 response_deserializer=face__pb2.FindRespons.FromString,
@@ -29,13 +29,13 @@ class FaceStub(object):
 class FaceServicer(object):
     """Missing associated documentation comment in .proto file."""
 
-    def Comparison(self, request, context):
+    def Comparison(self, request_iterator, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
-    def Find(self, request, context):
+    def Find(self, request_iterator, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -44,12 +44,12 @@ class FaceServicer(object):
 
 def add_FaceServicer_to_server(servicer, server):
     rpc_method_handlers = {
-            'Comparison': grpc.unary_unary_rpc_method_handler(
+            'Comparison': grpc.stream_unary_rpc_method_handler(
                     servicer.Comparison,
                     request_deserializer=face__pb2.ComparisonRequest.FromString,
                     response_serializer=face__pb2.ComparisonRespons.SerializeToString,
             ),
-            'Find': grpc.unary_unary_rpc_method_handler(
+            'Find': grpc.stream_unary_rpc_method_handler(
                     servicer.Find,
                     request_deserializer=face__pb2.FindRequest.FromString,
                     response_serializer=face__pb2.FindRespons.SerializeToString,
@@ -65,7 +65,7 @@ class Face(object):
     """Missing associated documentation comment in .proto file."""
 
     @staticmethod
-    def Comparison(request,
+    def Comparison(request_iterator,
             target,
             options=(),
             channel_credentials=None,
@@ -75,14 +75,14 @@ class Face(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/Face/Comparison',
+        return grpc.experimental.stream_unary(request_iterator, target, '/Face/Comparison',
             face__pb2.ComparisonRequest.SerializeToString,
             face__pb2.ComparisonRespons.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
     @staticmethod
-    def Find(request,
+    def Find(request_iterator,
             target,
             options=(),
             channel_credentials=None,
@@ -92,7 +92,7 @@ class Face(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/Face/Find',
+        return grpc.experimental.stream_unary(request_iterator, target, '/Face/Find',
             face__pb2.FindRequest.SerializeToString,
             face__pb2.FindRespons.FromString,
             options, channel_credentials,

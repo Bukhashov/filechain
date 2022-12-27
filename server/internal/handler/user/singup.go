@@ -1,29 +1,26 @@
 package user
 
 import (
+	"bufio"
 	"context"
 	"fmt"
 	"io"
 	"mime/multipart"
 	"net/http"
 	"os"
-	"path/filepath"
-
-	"github.com/Bukhashov/filechain/pkg/face"
-	"google.golang.org/grpc"
+	"github.com/Bukhashov/filechain/pkg/pb"
+	"github.com/Bukhashov/filechain/pkg/utils"
 )
 
 func (u *user) Singup(w http.ResponseWriter, r *http.Request){
-	var err error
 	var file multipart.File
-	format := []string {".png", ".jpg"}
-	format_is := false
-	
-	err = r.ParseMultipartForm(32 << 20); if err != nil {
+
+	err := r.ParseMultipartForm(32 << 20); if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-
+	
+	// #####
 	u.Dto.Email = r.FormValue("email")
 	u.Dto.Name = r.FormValue("name")
 	if u.Dto.Email == "" || u.Dto.Name == ""{
@@ -36,15 +33,10 @@ func (u *user) Singup(w http.ResponseWriter, r *http.Request){
 		return
 	}
 	
+	fileNameWithoutExtension, fileExtension := utils.ParseFileName(u.Dto.File.Filename)
 	
-	fileFormat := filepath.Ext(u.Dto.File.Filename)
-	
-	for i := range(format) {
-		if format[i] == fileFormat {
-			format_is = true
-		}
-	}
-	if !format_is{
+	// Controller format img [.png, .jpg]
+	ok := utils.ControlFormat(fileExtension); if !ok {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
@@ -60,22 +52,65 @@ func (u *user) Singup(w http.ResponseWriter, r *http.Request){
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-
-	conn, err := grpc.Dial(":5050", grpc.WithInsecure()); if err != nil {
+	
+	// gRPC
+	stream, err := u.service.Find(context.TODO()); if err != nil {
 		fmt.Print(err)
 	}
-	defer conn.Close()
-
-	c := face.NewFaceClient(conn)
-
-
-	c.Find(context.TODO(), &face.FindRequest{
-		FindOneof: &face.FindRequest_Metadata{
-			Metadata: &face.Metadata{ 
-				Filename: "ff",
-				Extension: ".png",
-			}, 
+	// send meta data
+	err = stream.Send(&pb.FindRequest{
+		FindData: &pb.FindRequest_Metadata{
+			Metadata: &pb.Metadata{
+				Filename: fileNameWithoutExtension,
+				Extension: fileExtension,
+			},
 		},
-	})
+	}); 
+	if err != nil {
+		fmt.Print(err)
+	}
+
+	openFile, err := os.Open("./assets/tmp/"+u.Dto.File.Filename); if err != nil {
+		u.logger.Info(err)
+		return
+	}
+
+	reader := bufio.NewReader(openFile)
+	buffer := make([]byte, 1024)
+
+	for {
+		n, err := reader.Read(buffer); if err == io.EOF { 
+			u.logger.Info(err)
+			break 
+		}
+		if err != nil { 
+			u.logger.Info(err) 
+		}
+		
+		err = stream.Send(&pb.FindRequest {
+			FindData: &pb.FindRequest_Image {
+				Image: buffer[:n],
+			},
+		});
+		
+		if err != nil {
+			fmt.Print(err)
+		}
+	}
+	res, err := stream.CloseAndRecv(); if err != nil {
+		fmt.Print(err)
+		return
+	}
+
+	if res.Total == 0 {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	if res.Total > 1 {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	
+	
 
 }
