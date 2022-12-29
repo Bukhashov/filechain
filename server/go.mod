@@ -9,6 +9,7 @@ require (
 	github.com/sirupsen/logrus v1.9.0
 	google.golang.org/grpc v1.51.0
 	github.com/BurntSushi/toml v1.2.1 // indirect
+	github.com/golang-jwt/jwt/v4 v4.4.3 // indirect
 	github.com/jackc/pgpassfile v1.0.0 // indirect
 	github.com/jackc/pgservicefile v0.0.0-20200714003250-2b9c44734f2b // indirect
 	github.com/jackc/puddle/v2 v2.1.2 // indirect

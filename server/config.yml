@@ -7,6 +7,6 @@ listen:
 storage:
   host: localhost
   port: 5432
-  database: block
-  username: muqiyat
+  name: block
+  user: muqiyat
   password: muqiyat

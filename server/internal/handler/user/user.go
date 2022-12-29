@@ -1,6 +1,7 @@
 package user
 
 import (
+	"time"
 	"net/http"
 	"github.com/Bukhashov/filechain/internal/config"
 	"github.com/Bukhashov/filechain/pkg/logging"
@@ -13,18 +14,35 @@ type User interface{
 	Singup(w http.ResponseWriter, req *http.Request)
 	Singin(w http.ResponseWriter, req *http.Request)
 	Delete(w http.ResponseWriter, req *http.Request)
+	GeneratToken()(tkn string, err error)
 }
 
 type user struct {
-	client 	*pgxpool.Pool
+	client	*pgxpool.Pool
 	service	pb.FaceClient
 	logger	*logging.Logger
 	config	config.Config
-	ID 		string `json:"id"`
-	Name 	string `json:"name"`
-	Email	string `json:"email"`
 	Dto		Dto
 }
+type BadRequrest struct {
+	Data	Data
+	Massage	string
+}
+type ResponsData struct {
+	Data	Data
+	Massage	string
+	Token	string
+}
+
+type Data struct{
+	Accepted 	time.Time
+	GiveAway	time.Time
+}
+
+const (
+	TmpImagePath = "./assets/image/tmp/"
+	FaceImagePath = "./assets/image/face/"
+)
 
 func NewUser(client *pgxpool.Pool, cc *grpc.ClientConn, config config.Config, logger *logging.Logger) User { 
 	return &user{
