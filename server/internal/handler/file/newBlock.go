@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"crypto/sha256"
 	"strconv"
-	"time"
+	// "time"
 )
 
 type fileBlock struct {

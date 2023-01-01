@@ -21,7 +21,7 @@ type user struct {
 	client	*pgxpool.Pool
 	service	pb.FaceClient
 	logger	*logging.Logger
-	config	config.Config
+	config	*config.Config
 	Dto		Dto
 }
 type BadRequrest struct {
@@ -44,7 +44,7 @@ const (
 	FaceImagePath = "./assets/image/face/"
 )
 
-func NewUser(client *pgxpool.Pool, cc *grpc.ClientConn, config config.Config, logger *logging.Logger) User { 
+func NewUser(client *pgxpool.Pool, cc *grpc.ClientConn, config *config.Config, logger *logging.Logger) User { 
 	return &user{
 		config: config,
 		service: pb.NewFaceClient(cc),
