@@ -97,18 +97,15 @@ func (u *user) Singin(w http.ResponseWriter, r *http.Request){
 			return
 		}
 		
-		userModel := &UserModel{
-			Email: u.Dto.Email,
-		}
 		storage := NewStorage(u.client, u.logger);
-		err = storage.FindByEmail(context.TODO(), userModel); if err != nil {
+		err = storage.FindByEmail(context.TODO(), u); if err != nil {
 			w.WriteHeader(http.StatusBadRequest)
 			w.Write([]byte("error mail"))
 			return
 		}
 		u.Dto.Image = TmpImagePath + u.Dto.File.Filename
 		TmpFileNameWithoutExtension, TmpFileExtension := utils.ParseFileName(u.Dto.File.Filename)
-		OriginalFileNameWithoutExtension, OriginalFileExtension := utils.ParseFileName(userModel.Image)
+		OriginalFileNameWithoutExtension, OriginalFileExtension := utils.ParseFileName(u.Model.Image)
 		
 		// Controller format img [.png, .jpg]
 		ok := utils.ControlFormat(TmpFileExtension); if !ok {
@@ -176,7 +173,7 @@ func (u *user) Singin(w http.ResponseWriter, r *http.Request){
 				},
 			},
 		})
-		openOriginalFile, err := os.Open(FaceImagePath+userModel.Image); if err != nil{
+		openOriginalFile, err := os.Open(FaceImagePath+u.Model.Image); if err != nil{
 			u.logger.Info(err)
 			return
 		}
@@ -211,7 +208,7 @@ func (u *user) Singin(w http.ResponseWriter, r *http.Request){
 			return
 		}
 		
-		jwtToken, err := u.GeneratToken(); if err != nil {
+		err = u.GeneratorJWT(); if err != nil {
 			w.WriteHeader(http.StatusBadRequest)
 			u.logger.Info(err)
 			return
@@ -223,7 +220,7 @@ func (u *user) Singin(w http.ResponseWriter, r *http.Request){
 				GiveAway: time.Now(),
 			},
 			Massage: "OK",
-			Token: jwtToken,
+			Token: u.Token.jwt,
 		}
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusOK)

@@ -11,7 +11,7 @@ import (
 type Repository interface {
 	Create(ctx context.Context, user *UserModel) error
 	EmailControl(ctx context.Context, d *Dto) error
-	FindByEmail(ctx context.Context, u *UserModel) error
+	FindByEmail(ctx context.Context, u *user) error
 	UpdateIamge(ctx context.Context, u *UserModel) error
 }
 
@@ -55,13 +55,13 @@ func (r *repository) EmailControl(ctx context.Context, d *Dto) (err error){
 	return nil
 }
 
-func (r *repository) FindByEmail(ctx context.Context, u *UserModel) (err error) {
+func (r *repository) FindByEmail(ctx context.Context, u *user) (err error) {
 	q := `
 		SELECT id, name, image
 		FROM users
 		WHERE email=$1
 	`
-	err = r.client.QueryRow(ctx, q, u.Email).Scan(&u.ID, &u.Name, &u.Image); if err != nil {
+	err = r.client.QueryRow(ctx, q, u.Dto.Email).Scan(&u.Model.ID, &u.Model.Name, &u.Model.Image); if err != nil {
 		return err
 	}
 	return nil

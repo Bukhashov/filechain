@@ -42,13 +42,13 @@ func (u *user) Singup(w http.ResponseWriter, r *http.Request){
 	
 	//	Ерер [user] GET әдісмен сұрау жіберген жағдауда бұл әдіс қате және
 	//	POST әдісмен жіберуін ескертіледі
-	if r.Method != http.MethodGet {
+	if r.Method != http.MethodPost {
 		dataResponse := &BadRequrest{
 			Data: Data{
 				Accepted: timeAccepted,
 				GiveAway: time.Now(),
 			},
-			Massage: "Don't worked method GET use POST methods",
+			Massage: r.Method + "method don't worked use POST methods",
 		}
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusBadRequest)

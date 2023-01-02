@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"net/http"
 	"github.com/Bukhashov/filechain/internal/handler/user"
+	// "github.com/Bukhashov/filechain/internal/handler/file"
+	"github.com/Bukhashov/filechain/internal/handler/folder"
 )
 
 func (r *rest) Run() {
@@ -13,9 +15,14 @@ func (r *rest) Run() {
 	http.HandleFunc(API_PATH+"/user/singup", u.Singup)
 	http.HandleFunc(API_PATH+"/user/singin", u.Singin)
 	http.HandleFunc(API_PATH+"/user/delete", u.Delete)
+	http.HandleFunc(API_PATH+"/user/folder", u.Folder)
 
+	fDer := folder.NewFolder(r.client, r.cfg, r.logger)
+	
+	http.HandleFunc(API_PATH+"/new/floder", fDer.New)
+	http.HandleFunc(API_PATH+"/get/floder", fDer.New)
+	http.HandleFunc(API_PATH+"/new/floder", fDer.New)
 
-	// b := block.NewBlock(client, cfg, logger)
 	// http.HandleFunc(API_PATH+"/new/block", b.New)
 	// http.HandleFunc(API_PATH+"/get/block", b.Get)
 	// http.HandleFunc(API_PATH+"/get/all/block", b.All)

@@ -14,7 +14,6 @@ type User interface{
 	Singup(w http.ResponseWriter, req *http.Request)
 	Singin(w http.ResponseWriter, req *http.Request)
 	Delete(w http.ResponseWriter, req *http.Request)
-	GeneratToken()(tkn string, err error)
 }
 
 type user struct {
@@ -23,7 +22,14 @@ type user struct {
 	logger	*logging.Logger
 	config	*config.Config
 	Dto		Dto
+	Model 	UserModel
+	Token	Token
 }
+
+type Token struct {
+	jwt 	string
+}
+
 type BadRequrest struct {
 	Data	Data
 	Massage	string

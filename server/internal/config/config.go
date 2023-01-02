@@ -14,6 +14,7 @@ type Config struct {
 		Port 	string `yaml:"port"`
 		}	`yaml:"listen"`
 	Storage StorageConfig `yaml:"storage"`
+	Token	Token `yaml:"token"`
 }
 
 type StorageConfig struct {
@@ -25,8 +26,8 @@ type StorageConfig struct {
 }
 
 
-type JsonWebToken struct {
-	
+type Token struct {
+	Key			string `yaml:"key"`
 }
 
 var instance *Config
