@@ -12,6 +12,7 @@ import (
 	"os"
 	"github.com/Bukhashov/filechain/pkg/pb"
 	"github.com/Bukhashov/filechain/pkg/utils"
+	"github.com/Bukhashov/filechain/internal/model"
 )
 
 // FUNC			Жаңа [user] ді тіркеу
@@ -283,7 +284,7 @@ func (u *user) Singup(w http.ResponseWriter, r *http.Request){
 			return
 		}
 	
-		userModel := &UserModel{
+		userModel := &model.User{
 			Name: u.Dto.Name, 
 			Email: u.Dto.Email,
 		}

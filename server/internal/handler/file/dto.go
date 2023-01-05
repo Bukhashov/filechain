@@ -1,4 +1,4 @@
-package block
+package file
 
 type Dto struct {
 	Username string `json:"username"`

@@ -13,3 +13,4 @@ type Dto struct {
 	Image	string `json:"image"`
 	File	*multipart.FileHeader `json:"file"`
 }
+

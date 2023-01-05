@@ -1,12 +1,14 @@
 package user
 
 import (
+	"context"
 	"errors"
 	"time"
-	"fmt"
 
-	"github.com/Bukhashov/filechain/internal/config"
 	"github.com/golang-jwt/jwt/v4"
+	"github.com/Bukhashov/filechain/internal/config"
+	"github.com/Bukhashov/filechain/pkg/logging"
+	"github.com/jackc/pgx/v5/pgxpool"
 )
 
 func (u *user) GeneratorJWT() (err error) {
@@ -19,7 +21,7 @@ func (u *user) GeneratorJWT() (err error) {
 		},
 		ID: u.Model.ID,
 		Name: u.Model.Name,
-		Email: u.Model.Email,
+		Email: u.Dto.Email,
 	})
 
 	u.Token.jwt, err = token.SignedString([]byte(u.config.Token.Key)); if err != nil {
@@ -28,7 +30,6 @@ func (u *user) GeneratorJWT() (err error) {
 
 	return nil
 }
-
 func (d *Dto) ParseJwt(clientToken string)(err error){
 	cfg := config.GetConfig()
 
@@ -43,6 +44,13 @@ func (d *Dto) ParseJwt(clientToken string)(err error){
 		return errors.New("invalid token")
 	}
 
-	fmt.Printf("", )
+	return nil
+}
+
+func (d *Dto) ControlJwt(ctx context.Context, client *pgxpool.Pool, logger *logging.Logger)(err error) {
+	s := NewStorage(client, logger)
+	err = s.EmailControl(ctx, d); if err != nil {
+		return errors.New("user token not fund")
+	}
 	return nil
 }

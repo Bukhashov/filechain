@@ -8,3 +8,5 @@ python3 -m grpc_tools.protoc -I ./protos --python_out=./face --pyi_out=./face --
 ```
 protoc -I ./protos --go_out=plugins=grpc:server/pkg/api protos/face.proto
 ```
+
+https://github.com/Jeiwan/blockchain_go

@@ -9,27 +9,27 @@ CREATE TABLE users (
 
 CREATE TABLE folder (
     id int NOT NULL PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+    address         BYTEA,
     name            VARCHAR,
-    addres          BYTEA,
+    userID          INT,
+    file            BYTEA,
     -- 0 private
     -- 1 public
-    access          BIT(1),
+    access          BOOLEAN
 );
 
 CREATE TABLE file (
     id int NOT NULL PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
-    time_stamp      DATE,
-    folder_addres   BYTEA,
-    file_addres     BYTEA,
+    timeStamp       INT,
     hash            BYTEA,
-    provHash        BYTEA,
-    
+    prevHash        BYTEA,
     -- 0 private
     -- 1 public
-    access          BIT(1),
-
+    access          BOOLEAN,
+    
     title           BYTEA,
-    data            BYTEA
+    type            BYTEA,
+    file            BYTEA
 );
 
 CREATE TABLE history (

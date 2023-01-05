@@ -3,23 +3,29 @@ package folder
 import (
 	"net/http"
 	"time"
+
 	"github.com/Bukhashov/filechain/internal/config"
+	"github.com/Bukhashov/filechain/internal/model"
 	"github.com/Bukhashov/filechain/pkg/logging"
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
 type Folder interface {
 	New(w http.ResponseWriter, req *http.Request)
-	GetOne(w http.ResponseWriter, req *http.Request)
-	GetAll(w http.ResponseWriter, req *http.Request)
-	History(w http.ResponseWriter, req *http.Request)
+	GetAllAddress(w http.ResponseWriter, req *http.Request)
 }
 type folder struct {
 	client	*pgxpool.Pool
 	logger	*logging.Logger
 	config	*config.Config
+	Model 	model.Folder
+	Dto		Dto
 }
 
+type Requrest struct {
+	Data	Data
+	Addres	string
+}
 type BadRequrest struct {
 	Data	Data
 	Massage	string

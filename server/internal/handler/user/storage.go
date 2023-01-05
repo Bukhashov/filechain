@@ -4,22 +4,23 @@ import (
 	"fmt"
 	"context"
 	"github.com/Bukhashov/filechain/pkg/logging"
+	"github.com/Bukhashov/filechain/internal/model"
 	"github.com/jackc/pgx/v5/pgconn"
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
 type Repository interface {
-	Create(ctx context.Context, user *UserModel) error
+	Create(ctx context.Context, user *model.User) error
 	EmailControl(ctx context.Context, d *Dto) error
 	FindByEmail(ctx context.Context, u *user) error
-	UpdateIamge(ctx context.Context, u *UserModel) error
+	UpdateIamge(ctx context.Context, u *model.User) error
 }
 
 type repository struct {
 	client *pgxpool.Pool
 	logger logging.Logger
 }
-func (r *repository) Create(ctx context.Context, u *UserModel) (err error) {
+func (r *repository) Create(ctx context.Context, u *model.User) (err error) {
 	q := `
 		INSERT INTO users (
 			name, email
@@ -44,12 +45,13 @@ func (r *repository) Create(ctx context.Context, u *UserModel) (err error) {
 }
 func (r *repository) EmailControl(ctx context.Context, d *Dto) (err error){
 	q := `
-		SELECT id
+		SELECT id, email
 		FROM users
 		WHERE email=$1
 	`
 
 	if err := r.client.QueryRow(ctx, q, d.Email).Scan(&d.ID, &d.Image); err != nil {
+		fmt.Print(err)
 		return err
 	}
 	return nil
@@ -67,7 +69,7 @@ func (r *repository) FindByEmail(ctx context.Context, u *user) (err error) {
 	return nil
 }
 
-func (r *repository) UpdateIamge(ctx context.Context, u *UserModel) (err error) {
+func (r *repository) UpdateIamge(ctx context.Context, u *model.User) (err error) {
 	q := `
 		UPDATE users
 		SET image=$1

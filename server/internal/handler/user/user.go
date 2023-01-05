@@ -1,9 +1,10 @@
 package user
 
 import (
-	"time"
 	"net/http"
+	"time"
 	"github.com/Bukhashov/filechain/internal/config"
+	"github.com/Bukhashov/filechain/internal/model"
 	"github.com/Bukhashov/filechain/pkg/logging"
 	"github.com/Bukhashov/filechain/pkg/pb"
 	"github.com/jackc/pgx/v5/pgxpool"
@@ -22,7 +23,7 @@ type user struct {
 	logger	*logging.Logger
 	config	*config.Config
 	Dto		Dto
-	Model 	UserModel
+	Model 	model.User
 	Token	Token
 }
 

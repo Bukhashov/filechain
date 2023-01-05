@@ -3,12 +3,14 @@ package user
 import (
 	"bufio"
 	"context"
+	"encoding/json"
+	"fmt"
 	"io"
 	"mime/multipart"
-	"encoding/json"
 	"net/http"
 	"os"
 	"time"
+
 	"github.com/Bukhashov/filechain/pkg/pb"
 	"github.com/Bukhashov/filechain/pkg/utils"
 )
@@ -45,7 +47,7 @@ func (u *user) Singin(w http.ResponseWriter, r *http.Request){
 	timeAccepted := time.Now()
 
 	//	Ерер [user] GET әдісмен сұрау жіберген жағдауда бұл әдіс қате және
-	//	POST әдісмен жіберуін ескертіледі
+	// POST әдісмен жіберуін ескертіледі
 	if r.Method != http.MethodPost {
 		dataResponse := &BadRequrest{
 			Data: Data{
@@ -59,6 +61,7 @@ func (u *user) Singin(w http.ResponseWriter, r *http.Request){
 		json.NewEncoder(w).Encode(dataResponse)
 		return
 	}
+
 	if r.Method == http.MethodPost {
 		var file multipart.File
 		// [IMG] дін сыйымдылығы < 32Mb дейін 
@@ -93,6 +96,7 @@ func (u *user) Singin(w http.ResponseWriter, r *http.Request){
 		}
 		
 		file, u.Dto.File, err = r.FormFile("img"); if err != nil {
+			
 			w.WriteHeader(http.StatusBadRequest)
 			return
 		}
@@ -109,11 +113,13 @@ func (u *user) Singin(w http.ResponseWriter, r *http.Request){
 		
 		// Controller format img [.png, .jpg]
 		ok := utils.ControlFormat(TmpFileExtension); if !ok {
+			fmt.Print("png")
 			w.WriteHeader(http.StatusBadRequest)
 			return
 		}
 		
 		tmpFile, err := os.Create(u.Dto.Image); if err != nil {
+			fmt.Print("creat")
 			u.logger.Info(err)
 			w.WriteHeader(http.StatusBadRequest)
 			return
@@ -213,7 +219,12 @@ func (u *user) Singin(w http.ResponseWriter, r *http.Request){
 			u.logger.Info(err)
 			return
 		}
-	
+
+		// [user] ден келген IMG ді tmp уакытша сақталатын файлдар тізімінен өшіріледі
+		if err = os.Remove(u.Dto.Image); err != nil {
+			u.logger.Info(err)
+		}
+
 		dataSingin := &Singin{
 			Data: Data{
 				Accepted: timeAccepted,
