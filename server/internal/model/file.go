@@ -6,6 +6,7 @@ type File struct {
 	Hash 		[]byte
 	Type		[]byte
 	Title		[]byte
+	FileName	[]byte
 	File 		[]byte
 	PrevHash 	[]byte
 	Access		bool

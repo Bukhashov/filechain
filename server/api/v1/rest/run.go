@@ -4,23 +4,25 @@ import (
 	"fmt"
 	"net/http"
 	"github.com/Bukhashov/filechain/internal/handler/user"
-	// "github.com/Bukhashov/filechain/internal/handler/file"
+	"github.com/Bukhashov/filechain/internal/handler/file"
 	"github.com/Bukhashov/filechain/internal/handler/folder"
 )
 
 func (r *rest) Run() {
 
 	u := user.NewUser(r.client, r.faceGrpcClient, r.cfg, r.logger)
-	
-	http.HandleFunc(API_PATH+"/user/singup", u.Singup)
-	http.HandleFunc(API_PATH+"/user/singin", u.Singin)
-	http.HandleFunc(API_PATH+"/user/delete", u.Delete)
+	http.HandleFunc(API_PATH+"/user/singup", u.Singup) // ok
+	http.HandleFunc(API_PATH+"/user/singin", u.Singin) // ok 
+	http.HandleFunc(API_PATH+"/user/delete", u.Delete) // ---
 
 	fDer := folder.NewFolder(r.client, r.cfg, r.logger)
 	
-	http.HandleFunc(API_PATH+"/new/floder", fDer.New)
+	http.HandleFunc(API_PATH+"/new/floder", fDer.New) //
 	// http.HandleFunc(API_PATH+"/get/floder", fDer.New)
 	// http.HandleFunc(API_PATH+"/new/floder", fDer.New)
+	
+	fileHandler := file.NewFile(r.client, *r.cfg, r.logger)
+	http.HandleFunc(API_PATH+"/add/file", fileHandler.Add)
 
 	// http.HandleFunc(API_PATH+"/new/block", b.New)
 	// http.HandleFunc(API_PATH+"/get/block", b.Get)

@@ -1,14 +1,25 @@
 package utils
 
 var (
-	admissible = []string {".png", ".jpg"}
+	imgAdmissible = []string {".png", ".jpg"}
+	fileAdmissible = []string {".pdf"}
 )
 
-func ControlFormat(format string) bool {
-	for i := range(admissible) {
-		if format == admissible[i] {
+func ControlImgFormat(format string) bool {
+	for i := range(imgAdmissible) {
+		if format == imgAdmissible[i] {
 			return true
 		}
 	}
 	return false
 }
+
+func ControlFileFormat(format string) bool {
+	for i := range(fileAdmissible) {
+		if format == fileAdmissible[i] {
+			return true
+		}
+	}
+	return false
+}
+

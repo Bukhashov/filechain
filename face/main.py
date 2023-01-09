@@ -19,15 +19,18 @@ class Face(face_pb2_grpc.FaceServicer):
                 filepath = get_pathfile(request.metadata.filename, request.metadata.extension)
                 continue
             data.extend(request.image)
-        with open(filepath, 'wb') as f:
+        with open("./tmp/"+filepath, 'wb') as f:
             f.write(data)
             f.close()
         
-        face_img = face_recognition.load_image_file(filepath)
+        face_img = face_recognition.load_image_file("./tmp/"+filepath)
         faceArr = face_recognition.face_locations(face_img)
         
-        # os.remove(filepath)
+        os.remove("./tmp/"+filepath)
+
         print(faceArr)
+        if faceArr == []:
+            return face_pb2.FindRespons(total=0)
         return face_pb2.FindRespons(total=len(faceArr))
 
     def Comparison(self, request_iterator, context):

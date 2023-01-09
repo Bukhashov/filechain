@@ -36,7 +36,7 @@ func (r *repository) Create(ctx context.Context, u *model.User) (err error) {
 			newErr := fmt.Errorf(fmt.Sprintf("SQL ERROR Massage: %s Detail: %s Where: %s Code: %s SQLSelect: %s", pgErr.Message, pgErr.Detail, pgErr.Where, pgErr.Code, pgErr.SQLState()))
 			r.logger.Info(newErr)
 
-			return nil
+			return err
 		}
 		return nil
 	}
@@ -49,9 +49,7 @@ func (r *repository) EmailControl(ctx context.Context, d *Dto) (err error){
 		FROM users
 		WHERE email=$1
 	`
-
-	if err := r.client.QueryRow(ctx, q, d.Email).Scan(&d.ID, &d.Image); err != nil {
-		fmt.Print(err)
+	if err := r.client.QueryRow(ctx, q, d.Email).Scan(&d.ID, &d.Email); err != nil {
 		return err
 	}
 	return nil

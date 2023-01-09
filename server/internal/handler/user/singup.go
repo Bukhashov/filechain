@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"strconv"
 	"time"
 	"mime/multipart"
 	"net/http"
@@ -113,7 +114,7 @@ func (u *user) Singup(w http.ResponseWriter, r *http.Request){
 		// Деректер қорына сұраныс жібереміз
 		// EMAIL басқа [user] ке тиістілі болған жоғдайда
 		// Жаңа [user] ден басқа EMAIL қолдануын сұрады
-		err = storage.EmailControl(context.TODO(), &u.Dto); if err != nil {
+		err = storage.EmailControl(context.TODO(), &u.Dto); if err == nil {
 			dataResponse := &BadRequrest{
 				Data: Data{
 					Accepted: timeAccepted,
@@ -135,7 +136,7 @@ func (u *user) Singup(w http.ResponseWriter, r *http.Request){
 
 		// IMAGE тек [.png .jpg] форматарында қабылданады
 		// Жаңа [user] басқа форматтар IMAGE жібермегендігін тексеру
-		ok := utils.ControlFormat(fileExtension); if !ok {
+		ok := utils.ControlImgFormat(fileExtension); if !ok {
 			dataResponse := &BadRequrest{
 				Data: Data{
 					Accepted: timeAccepted,
@@ -200,7 +201,7 @@ func (u *user) Singup(w http.ResponseWriter, r *http.Request){
 			},
 		});
 		if err != nil {
-			fmt.Print(err)
+			fmt.Printf("find request grpc: %v ", err)
 		}
 		// Сақталған файлды IMAGE ді ашады
 		// Және оқу аяқталған соң жабады
@@ -304,7 +305,7 @@ func (u *user) Singup(w http.ResponseWriter, r *http.Request){
 			return
 		}
 	
-		userModel.Image = userModel.ID+fileExtension
+		userModel.Image = strconv.FormatInt(userModel.ID, 10)+fileExtension
 	
 		fileManager := utils.NewFileManager()
 		err = fileManager.CopyNewPath(u.Dto.Image, FaceImagePath+userModel.Image); if err != nil {
@@ -336,7 +337,6 @@ func (u *user) Singup(w http.ResponseWriter, r *http.Request){
 			json.NewEncoder(w).Encode(dataResponse)
 			return
 		}
-	
 		w.WriteHeader(http.StatusCreated)
 	}
 }

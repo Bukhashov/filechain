@@ -96,7 +96,6 @@ func (u *user) Singin(w http.ResponseWriter, r *http.Request){
 		}
 		
 		file, u.Dto.File, err = r.FormFile("img"); if err != nil {
-			
 			w.WriteHeader(http.StatusBadRequest)
 			return
 		}
@@ -112,7 +111,7 @@ func (u *user) Singin(w http.ResponseWriter, r *http.Request){
 		OriginalFileNameWithoutExtension, OriginalFileExtension := utils.ParseFileName(u.Model.Image)
 		
 		// Controller format img [.png, .jpg]
-		ok := utils.ControlFormat(TmpFileExtension); if !ok {
+		ok := utils.ControlImgFormat(TmpFileExtension); if !ok {
 			fmt.Print("png")
 			w.WriteHeader(http.StatusBadRequest)
 			return

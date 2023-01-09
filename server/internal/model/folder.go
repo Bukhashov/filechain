@@ -1,7 +1,7 @@
 package model
 
 type Folder struct {
-	ID 			string
+	ID 			int64
 	Name 		string
 	Addres 		[]byte
 	File		[]byte

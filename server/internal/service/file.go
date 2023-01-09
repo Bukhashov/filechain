@@ -35,7 +35,7 @@ func NewFile(prevFile *model.File) *model.File {
 	file := &File{
 		TimeStamp: 	prevFile.TimeStamp,
 		Hash: 		[]byte{},
-		PrevHash: 	prevFile.Hash,
+		PrevHash: 	prevFile.PrevHash,
 		
 		Title: 		prevFile.Title,
 		Type: 		prevFile.Type,

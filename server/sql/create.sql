@@ -8,7 +8,7 @@ CREATE TABLE users (
 );
 
 CREATE TABLE folder (
-    id int NOT NULL PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+    id INTEGER NOT NULL PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
     address         BYTEA,
     name            VARCHAR,
     userID          INT,

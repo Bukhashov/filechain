@@ -28,6 +28,7 @@ type StorageConfig struct {
 
 type Token struct {
 	Key			string `yaml:"key"`
+	Telegram	string `yaml:"telegram"`
 }
 
 var instance *Config

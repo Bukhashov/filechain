@@ -94,7 +94,8 @@ func (f *folder) New(w http.ResponseWriter, r *http.Request) {
 			Name: f.Dto.FolderName,
 			Addres: newfolder.Addres,
 			File: newFile.Hash,
-			UserId: 23,
+			UserId: userControl.ID,
+			// UserId: userControl.ID,
 			Access: false,
 		}
 

@@ -9,7 +9,7 @@ import(
 )
 
 type Filechain interface {
-	// Add(w http.ResponseWriter, req *http.Request)
+	Add(w http.ResponseWriter, req *http.Request)
 	Get(w http.ResponseWriter, req *http.Request)
 	All(w http.ResponseWriter, req *http.Request)
 }
@@ -18,9 +18,14 @@ type filechain struct {
 	client 	*pgxpool.Pool
 	logger	*logging.Logger
 	config	config.Config
+	Dto		Dto
 }
 
 // REQUEST
+type Requrest struct {
+	Data	Data
+	Massage	string
+}
 type BadRequrest struct {
 	Data	Data
 	Massage	string
@@ -30,7 +35,12 @@ type Data struct{
 	GiveAway	time.Time
 }
 
-func NewBlock(client *pgxpool.Pool, config config.Config, logger *logging.Logger) Filechain{
+
+const (
+	TmpFilePath = "./assets/file/tmp/"
+)
+
+func NewFile(client *pgxpool.Pool, config config.Config, logger *logging.Logger) Filechain{
 	return &filechain {
 		config: config,
 		logger: logger,
