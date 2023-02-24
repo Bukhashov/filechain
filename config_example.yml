@@ -1,0 +1,20 @@
+---
+
+is_debug: true
+listen:
+  type: port
+  port: 8080
+storage:
+  host: localhost
+  port: 5432
+  name: database_name
+  user: database_user_name
+  password: database_password
+token:
+  key: token_key
+  telegram: telegram_token
+smtp:
+  server: smtp_server
+  port: smtp_server_port
+  email: your_email
+  password: your_email_password
