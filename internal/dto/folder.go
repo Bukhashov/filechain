@@ -1,6 +1,6 @@
-package folder
+package dto
 
-type Dto struct {
+type Folder struct {
 	Id	 		string `json:"id"`
 	FolderName 	string `json:"folderName"`
 }

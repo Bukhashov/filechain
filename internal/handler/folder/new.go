@@ -2,9 +2,7 @@ package folder
 
 import (
 	"context"
-	"encoding/json"
 	"net/http"
-	"time"
 
 	"github.com/gin-gonic/gin"
 
@@ -92,18 +90,12 @@ func (f *folder) New(c *gin.Context) {
 		}
 
 		// history
+
+
+		c.JSON(http.StatusOK, gin.H{
+			"code" : http.StatusOK,
+			"filder_addres" : string(newfolder.Addres),
+ 		})
 		
-
-		dataResponse := &Requrest{
-			Data: Data{
-				Accepted: timeAccepted,
-				GiveAway: time.Now(),
-			},
-			Addres: string(newfolder.Addres),
-		}
-		w.Header().Set("Content-Type", "application/json")
-		w.WriteHeader(http.StatusBadRequest)
-		json.NewEncoder(w).Encode(dataResponse)
-
 		return
 }
