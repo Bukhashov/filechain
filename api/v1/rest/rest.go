@@ -36,7 +36,7 @@ func (res *rest) Run() {
 	v1 := r.router.Group("/api/v1"); {
 		authPath := v1.Group("/auth"); {
 			authPath.POST("/singup", userHandler.Singup)
-			authPath.POST("/singin", userHandler.Singip)
+			authPath.POST("/singin", userHandler.Singin)
 			authPath.POST("/delete", userHandler.Delete)
 		}
 		folderPath := v1.Group("/folder"); {

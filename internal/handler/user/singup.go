@@ -13,6 +13,7 @@ import (
 	"github.com/gin-gonic/gin"
 
 	"github.com/Bukhashov/filechain/internal/model"
+	"github.com/Bukhashov/filechain/internal/handler/plug"
 	"github.com/Bukhashov/filechain/pkg/pb"
 	"github.com/Bukhashov/filechain/pkg/utils"
 )
@@ -45,10 +46,7 @@ func (u *user) Singup(c *gin.Context) {
 	var err error
 	
 	file, u.Dto.File, err = c.Request.FormFile("img"); if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"code" : http.StatusOK,
-			"massage" : "not your img",
-		})
+		plug.Response(c, http.StatusBadRequest, "not your img")
 		return
 	}
 	u.Dto.Email = c.PostForm("email")
@@ -65,10 +63,7 @@ func (u *user) Singup(c *gin.Context) {
 		Email: u.Dto.Email,
 	}
 	if err = storage.FindUserByEmail(context.TODO(), &userModel); err == nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"code" : http.StatusBadRequest,
-			"massage" : "Email address is already in use by another user",
-		})
+		plug.Response(c, http.StatusBadRequest, "Email address is already in use by another user")
 		return
 	}
 	// IMAGE дін аты мен форматын бөлкен алу
@@ -80,28 +75,19 @@ func (u *user) Singup(c *gin.Context) {
 	// IMAGE тек [.png .jpg] форматарында қабылданады
 	// Жаңа [user] басқа форматтар IMAGE жібермегендігін тексеру
 	ok := utils.ControlImgFormat(fileExtension); if !ok {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"code" : http.StatusBadRequest,
-			"massage" : "Photo should be in [.png .jpg] format only",
-		})
+		plug.Response(c, http.StatusBadRequest, "Photo should be in [.png .jpg] format only")
 		return
 	}
 	// IMAGE ді сақтау
 	tmpFile, err := os.Create(u.Dto.Image); if err != nil {
 		u.logger.Info(err)
-		c.JSON(http.StatusBadRequest, gin.H{
-			"code" : http.StatusBadRequest,
-			"massage" : "An error occurred on the server, please try again later",
-		})
+		plug.Response(c, http.StatusInternalServerError, MassageStatusInternalServerError)
 		return
 	}
 	defer tmpFile.Close();
 	_, err = io.Copy(tmpFile, file); if err != nil {
 		u.logger.Info(err)
-		c.JSON(http.StatusBadRequest, gin.H{
-			"code" : http.StatusBadRequest,
-			"massage" : "An error occurred on the server, please try again later",
-		})
+		plug.Response(c, http.StatusInternalServerError, MassageStatusInternalServerError)
 		return
 	}
 	// протокол gRPC арқылы IMAGE де адамнын бейнесін анықтайтын server сұрау жібереміз
@@ -128,10 +114,7 @@ func (u *user) Singup(c *gin.Context) {
 	// Және оқу аяқталған соң жабады
 	openFile, err := os.Open(u.Dto.Image); if err != nil {
 		u.logger.Info(err)
-		c.JSON(http.StatusBadRequest, gin.H{
-			"code" : http.StatusBadRequest,
-			"massage" : "An error occurred on the server, please try again later",
-		})
+		plug.Response(c, http.StatusInternalServerError, MassageStatusInternalServerError)
 		return
 	}
 	defer openFile.Close()
@@ -158,48 +141,30 @@ func (u *user) Singup(c *gin.Context) {
 	// протокол gRPC арқылы жіберу аяқталған сон соединения жабылады
 	res, err := stream.CloseAndRecv(); if err != nil {
 		u.logger.Info(err)
-		c.JSON(http.StatusBadRequest, gin.H{
-			"code" : http.StatusBadRequest,
-			"massage" : "An error occurred on the server, please try again later",
-		})
+		plug.Response(c, http.StatusInternalServerError, MassageStatusInternalServerError)
 		return
 	}
 	if res.Total == 0 || res.Total > 1 {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"code" : http.StatusBadRequest,
-			"massage" : "There should only be one person in the photo",
-		})
+		plug.Response(c, http.StatusInternalServerError, "There should only be one person in the photo")
 		return
 	}
 	err = storage.Create(context.TODO(), &userModel); if err != nil {
 		u.logger.Info(err)
-		c.JSON(http.StatusBadRequest, gin.H{
-			"code" : http.StatusBadRequest,
-			"massage" : "An error occurred on the server, please try again later",
-		})
+		plug.Response(c, http.StatusInternalServerError, MassageStatusInternalServerError)
 		return
 	}
 	
 	userModel.Image = strconv.FormatInt(userModel.ID, 10)+fileExtension
 	err = utils.CopyNewPath(u.Dto.Image, FaceImagePath+userModel.Image); if err != nil {
 		u.logger.Info(err)
-		c.JSON(http.StatusBadRequest, gin.H{
-			"code" : http.StatusBadRequest,
-			"massage" : "An error occurred on the server, please try again later",
-		})
+		plug.Response(c, http.StatusInternalServerError, MassageStatusInternalServerError)
 		return
 	}
 
 	err = storage.UpdateIamge(context.TODO(), &userModel); if err != nil {
 		u.logger.Info(err)
-		c.JSON(http.StatusBadRequest, gin.H{
-			"code" : http.StatusBadRequest,
-			"massage" : "An error occurred on the server, please try again later",
-		})
+		plug.Response(c, http.StatusInternalServerError, MassageStatusInternalServerError)
 		return
 	}
-	c.JSON(http.StatusCreated, gin.H{
-		"code" : http.StatusCreated,
-		"massage" : "created",
-	})
+	plug.Response(c, http.StatusCreated, "created")
 }

@@ -1,8 +1,6 @@
 package user
 
 import (
-	"time"
-	
 	"github.com/gin-gonic/gin"
 	"google.golang.org/grpc"
 	"github.com/jackc/pgx/v5/pgxpool"
@@ -11,6 +9,10 @@ import (
 	"github.com/Bukhashov/filechain/internal/model"
 	"github.com/Bukhashov/filechain/pkg/logging"
 	"github.com/Bukhashov/filechain/pkg/pb"
+)
+
+const (
+	MassageStatusInternalServerError = "An error occurred on the server, please try again later"
 )
 
 type User interface{
@@ -31,22 +33,6 @@ type user struct {
 
 type Token struct {
 	jwt 	string
-}
-
-type BadRequrest struct {
-	Data	Data
-	Massage	string
-}
-
-type ResponsData struct {
-	Data	Data
-	Massage	string
-	Token	string
-}
-
-type Data struct{
-	Accepted 	time.Time
-	GiveAway	time.Time
 }
 
 const (

@@ -1,10 +1,12 @@
 package user
 
 import (
-	"fmt"
 	"context"
-	"github.com/Bukhashov/filechain/pkg/logging"
+	"fmt"
+
 	"github.com/Bukhashov/filechain/internal/model"
+	"github.com/Bukhashov/filechain/pkg/logging"
+	"github.com/Bukhashov/filechain/pkg/validator"
 	"github.com/jackc/pgx/v5/pgconn"
 	"github.com/jackc/pgx/v5/pgxpool"
 )
@@ -22,6 +24,10 @@ type repository struct {
 }
 
 func (r *repository) Create(ctx context.Context, u *model.User) (err error) {
+	if err = validator.UserVaidator(u); err != nil {
+		return err;
+	}
+	
 	q := `
 		INSERT INTO users (name, email)
 		VALUES ($1, $2)
