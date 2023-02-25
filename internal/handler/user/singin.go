@@ -10,7 +10,9 @@ import (
 	"os"
 
 	"github.com/Bukhashov/filechain/internal/handler/plug"
+	"github.com/Bukhashov/filechain/internal/storage"
 	"github.com/Bukhashov/filechain/internal/model"
+	"github.com/Bukhashov/filechain/pkg/token"
 	"github.com/Bukhashov/filechain/pkg/pb"
 	"github.com/Bukhashov/filechain/pkg/utils"
 	"github.com/gin-gonic/gin"
@@ -48,7 +50,7 @@ func (u *user) Singin(c *gin.Context) {
 		return
 	}
 
-	storage := NewStorage(u.client, u.logger);
+	storage := storage.NewUserStorage(u.client, u.logger);
 	userModel := model.User{
 		Email: u.Dto.Email,
 	}
@@ -68,19 +70,19 @@ func (u *user) Singin(c *gin.Context) {
 	tmpFile, err := os.Create(u.Dto.Image); if err != nil {
 		fmt.Print("creat")
 		u.logger.Info(err)
-		plug.Response(c, http.StatusInternalServerError, MassageStatusInternalServerError)
+		plug.ResponseStatusInternalServerError(c)
 		return
 	}
 	defer tmpFile.Close();
 	_, err = io.Copy(tmpFile, file); if err != nil {
-		plug.Response(c, http.StatusInternalServerError, MassageStatusInternalServerError)
+		plug.ResponseStatusInternalServerError(c)
 		return
 	}
 
 	// gRPC
 	stream, err := u.service.Comparison(context.TODO()); if err != nil {
 		u.logger.Info(err)
-		plug.Response(c, http.StatusInternalServerError, MassageStatusInternalServerError)
+		plug.ResponseStatusInternalServerError(c)
 		return
 	}
 	stream.Send(&pb.ComparisonRequest{
@@ -127,7 +129,7 @@ func (u *user) Singin(c *gin.Context) {
 	})
 	openOriginalFile, err := os.Open(FaceImagePath+u.Model.Image); if err != nil{
 		u.logger.Info(err)
-		plug.Response(c, http.StatusInternalServerError, MassageStatusInternalServerError)
+		plug.ResponseStatusInternalServerError(c)
 		return
 	}
 	defer openOriginalFile.Close()
@@ -154,17 +156,25 @@ func (u *user) Singin(c *gin.Context) {
 
 	res, err := stream.CloseAndRecv(); if err != nil {
 		u.logger.Info(err)
-		plug.Response(c, http.StatusInternalServerError, MassageStatusInternalServerError)
+		plug.ResponseStatusInternalServerError(c)
 		return
 	}
+
 	if !res.Coincidences {
 		u.logger.Info(err)
-		plug.Response(c, http.StatusInternalServerError, MassageStatusInternalServerError)
+		plug.ResponseStatusInternalServerError(c)
 		return
 	}
-	err = u.GeneratorJWT(); if err != nil {
+
+	jwtToken := token.NewToken(u.config.Token.Key)
+	newToken, err := jwtToken.Generator(&model.User{
+		ID: u.Dto.ID,
+		Email: u.Dto.Email,
+		Name: u.Dto.Name,
+	})
+	if err != nil {
 		u.logger.Info(err)
-		plug.Response(c, http.StatusInternalServerError, MassageStatusInternalServerError)
+		plug.ResponseStatusInternalServerError(c)
 		return
 	}
 	
@@ -173,5 +183,10 @@ func (u *user) Singin(c *gin.Context) {
 		u.logger.Info(err)
 	}
 	
-	plug.Response(c, http.StatusInternalServerError, MassageStatusInternalServerError)
+	c.JSON(http.StatusOK, gin.H{
+		"code" : http.StatusOK,
+		"maggase" : "ok",
+		"token" : newToken,
+	})
+
 }

@@ -1,4 +1,4 @@
-package user
+package storage
 
 import (
 	"context"
@@ -11,19 +11,19 @@ import (
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
-type Repository interface {
+type UserRepository interface {
 	Create(ctx context.Context, user *model.User)(err error)
 	// FindUserById(ctx context.Context, u *model.User) error
 	FindUserByEmail(ctx context.Context, u *model.User)(err error)
 	UpdateIamge(ctx context.Context, u *model.User)(err error)
 }
 
-type repository struct {
+type userRepository struct {
 	client *pgxpool.Pool
 	logger logging.Logger
 }
 
-func (r *repository) Create(ctx context.Context, u *model.User) (err error) {
+func (r *userRepository) Create(ctx context.Context, u *model.User) (err error) {
 	if err = validator.UserVaidator(u); err != nil {
 		return err;
 	}
@@ -45,7 +45,7 @@ func (r *repository) Create(ctx context.Context, u *model.User) (err error) {
 	}
 	return nil
 }
-func (r *repository) FindUserByEmail(ctx context.Context, u *model.User)(err error){
+func (r *userRepository) FindUserByEmail(ctx context.Context, u *model.User)(err error){
 	q := `
 		SELECT id, email, image
 		FROM users
@@ -56,7 +56,7 @@ func (r *repository) FindUserByEmail(ctx context.Context, u *model.User)(err err
 	}
 	return nil
 }
-func (r *repository) UpdateIamge(ctx context.Context, u *model.User)(err error){
+func (r *userRepository) UpdateIamge(ctx context.Context, u *model.User)(err error){
 	q := `
 		UPDATE users
 		SET image=$1
@@ -68,8 +68,8 @@ func (r *repository) UpdateIamge(ctx context.Context, u *model.User)(err error){
 	return  nil
 }
 
-func NewStorage(client *pgxpool.Pool, logger *logging.Logger) Repository {
-	return &repository{
+func NewUserStorage(client *pgxpool.Pool, logger *logging.Logger) UserRepository {
+	return &userRepository{
 		client: client,
 		logger: *logger,
 	}

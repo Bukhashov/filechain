@@ -1,11 +1,11 @@
-package user
+package dto
 
 import (
 	"mime/multipart"
 	"github.com/golang-jwt/jwt/v4"
 )
 
-type Dto struct {
+type User struct {
 	jwt.RegisteredClaims
 	ID 		int64 `json:"id"`
 	Name 	string `json:"name"`

@@ -4,16 +4,16 @@ import (
 	"github.com/gin-gonic/gin"
 	"google.golang.org/grpc"
 	"github.com/jackc/pgx/v5/pgxpool"
-
 	"github.com/Bukhashov/filechain/configs"
 	"github.com/Bukhashov/filechain/internal/model"
+	"github.com/Bukhashov/filechain/internal/dto"
 	"github.com/Bukhashov/filechain/pkg/logging"
 	"github.com/Bukhashov/filechain/pkg/pb"
 )
 
-const (
-	MassageStatusInternalServerError = "An error occurred on the server, please try again later"
-)
+// massageStatusInternalServerError := MassageStatusInternalServerError{}
+
+// "An error occurred on the server, please try again later"
 
 type User interface{
 	Singup(c *gin.Context)
@@ -26,13 +26,13 @@ type user struct {
 	service	pb.FaceClient
 	logger	*logging.Logger
 	config	*configs.Config
-	Dto		Dto
+	Dto		dto.User
 	Model 	model.User
 	Token	Token
 }
 
 type Token struct {
-	jwt 	string
+	Jwt 	string
 }
 
 const (
