@@ -6,7 +6,7 @@ import (
 
 	"github.com/Bukhashov/filechain/internal/model"
 	"github.com/Bukhashov/filechain/pkg/logging"
-	"github.com/Bukhashov/filechain/pkg/validator"
+	// "github.com/Bukhashov/filechain/pkg/validator"
 	"github.com/jackc/pgx/v5/pgconn"
 	"github.com/jackc/pgx/v5/pgxpool"
 )
@@ -24,9 +24,9 @@ type userRepository struct {
 }
 
 func (r *userRepository) Create(ctx context.Context, u *model.User) (err error) {
-	if err = validator.UserVaidator(u); err != nil {
-		return err;
-	}
+	// if err = validator.UserVaidator(u); err != nil {
+	// 	return err;
+	// }
 	
 	q := `
 		INSERT INTO users (name, email)

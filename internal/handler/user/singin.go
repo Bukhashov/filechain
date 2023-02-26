@@ -51,11 +51,12 @@ func (u *user) Singin(c *gin.Context) {
 	}
 
 	storage := storage.NewUserStorage(u.client, u.logger);
-	userModel := model.User{
-		Email: u.Dto.Email,
-	}
+	// userModel := model.User{
+	// 	Email: u.Dto.Email,
+	// }
+	u.Model.Email = u.Dto.Email
 
-	err = storage.FindUserByEmail(context.TODO(), &userModel); if err != nil {
+	err = storage.FindUserByEmail(context.TODO(), &u.Model); if err != nil {
 		plug.Response(c, http.StatusBadRequest, "error mail")
 		return
 	}

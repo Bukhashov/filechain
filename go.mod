@@ -2,14 +2,10 @@ module github.com/Bukhashov/filechain
 
 go 1.20
 
-require google.golang.org/grpc v1.53.0
-
 require (
 	github.com/asaskevich/govalidator v0.0.0-20200108200545-475eaeb16496 // indirect
 	github.com/go-ozzo/ozzo-validation v3.6.0+incompatible // indirect
-)
-
-require (
+	google.golang.org/grpc v1.53.0
 	github.com/BurntSushi/toml v1.1.0 // indirect
 	github.com/bytedance/sonic v1.8.0 // indirect
 	github.com/chenzhuoyu/base64x v0.0.0-20221115062448-fe3a3abad311 // indirect

@@ -2,7 +2,7 @@ package rest
 
 import (
 	"fmt"
-	"net/http"
+	// "net/http"
 	"github.com/gin-gonic/gin"
 	"google.golang.org/grpc"
 
@@ -17,7 +17,7 @@ import (
 )
 
 type rest struct {
-	router *gin.Engine
+	// router *gin.Engine
 	client 			*pgxpool.Pool
 	faceGrpcClient 	*grpc.ClientConn
 	cfg 			*configs.Config
@@ -25,15 +25,13 @@ type rest struct {
 }
 
 func (res *rest) Run() {
-	r := rest {
-        router: gin.Default(),
-    }
+	router := gin.Default();
 
 	userHandler := user.NewUser(res.client, res.faceGrpcClient, res.cfg, res.logger)
 	folderHandler := folder.NewFolder(res.client, res.cfg, res.logger)
 	fileHandler := file.NewFile(res.client, *res.cfg, res.logger)
 
-	v1 := r.router.Group("/api/v1"); {
+	v1 := router.Group("/api/v1"); {
 		authPath := v1.Group("/auth"); {
 			authPath.POST("/singup", userHandler.Singup)
 			authPath.POST("/singin", userHandler.Singin)
@@ -49,17 +47,21 @@ func (res *rest) Run() {
 	}
 
 	
-	// http.HandleFunc(API_PATH+"/new/block", b.New)
+	// http.HandleFunc("/new/block", fubc)
 	// http.HandleFunc(API_PATH+"/get/block", b.Get)
 	// http.HandleFunc(API_PATH+"/get/all/block", b.All)
 	// http.HandleFunc(API_PATH+"/update/block", b.Update)
-	fmt.Printf("REST API RUN IP %s PORT %s", "127.0.0.1", r.cfg.Lesten.Port)
+	fmt.Printf("REST API RUN IP %s PORT %s", "127.0.0.1", res.cfg.Lesten.Port)
 	
+	err := router.Run(fmt.Sprintf(":%s", res.cfg.Lesten.Port)); if err != nil {
+        panic("[Error] failed to start Gin server due to: " + err.Error())
+        return
+    }
 
-	err := http.ListenAndServe(fmt.Sprintf(":%s", res.cfg.Lesten.Port), nil); if err != nil {
-		r.logger.Info(err)
-		return
-	}
+	// err := http.ListenAndServe(fmt.Sprintf(":%s", res.cfg.Lesten.Port), nil); if err != nil {
+	// 	res.logger.Info(err)
+	// 	return
+	// }
 
 }
 
