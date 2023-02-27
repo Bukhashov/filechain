@@ -134,7 +134,7 @@
 
 ------------------------------------------------------------------------------------------
 
-### Forder
+### File
 
 <details>
     <summary><code>POST</code><code><b>/file/add</b></code></summary>
