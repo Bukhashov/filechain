@@ -3,7 +3,7 @@
 - URI path: [localhost]/api/[api_version]/
 - API version: v1
 
-- You can use already created postman collection
+- You can use already created <a href="https://github.com/Bukhashov/filechain/blob/main/docs/postman/FileChain.postman_collection.json" download>postman collection</a>
 ------------------------------------------------------------------------------------------
 ### Authorization
 
