@@ -42,8 +42,6 @@ import (
 // massage 				type	string
 
 func (u *user) Singup(c *gin.Context) {
-	fmt.Print("sing up req")
-	// [user] ден сұраудын келген уақыты
 	var file multipart.File
 	var err error
 	

@@ -38,8 +38,8 @@ func (res *rest) Run() {
 			authPath.POST("/delete", userHandler.Delete)
 		}
 		folderPath := v1.Group("/folder"); {
-			folderPath.POST("/new", folderHandler.New)
-			folderPath.POST("/get", folderHandler.New) //###
+			folderPath.POST("/create", folderHandler.New)
+			folderPath.POST("/all", folderHandler.New) //###
 		}
 		filePath := v1.Group("/file"); {
 			filePath.POST("/add", fileHandler.Add)
@@ -55,7 +55,6 @@ func (res *rest) Run() {
 	
 	err := router.Run(fmt.Sprintf(":%s", res.cfg.Lesten.Port)); if err != nil {
         panic("[Error] failed to start Gin server due to: " + err.Error())
-        return
     }
 
 	// err := http.ListenAndServe(fmt.Sprintf(":%s", res.cfg.Lesten.Port), nil); if err != nil {

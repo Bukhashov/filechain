@@ -8,11 +8,11 @@ import (
 
 	"github.com/Bukhashov/filechain/internal/dto"
 	// "github.com/Bukhashov/filechain/internal/handler/user"
+	"github.com/Bukhashov/filechain/internal/handler/plug"
 	"github.com/Bukhashov/filechain/internal/model"
 	"github.com/Bukhashov/filechain/internal/service"
 	"github.com/Bukhashov/filechain/internal/storage"
 	"github.com/Bukhashov/filechain/pkg/token"
-	"github.com/Bukhashov/filechain/internal/handler/plug"
 )
 
 // FUNC			Жаңа [user] ді тіркеу
@@ -39,40 +39,41 @@ import (
 
 
 func (f *folder) New(c *gin.Context) {
-		userToken := c.Request.Header["Authorization"]
 
-		userDto := dto.User{}
+	userToken := c.Request.Header["Authorization"]
+	
+	userDto := dto.User{}
 		
-		jwtToken := token.NewToken(f.config.Token.Key)
+	jwtToken := token.NewToken(f.config.Token.Key)
 		
-		err := jwtToken.Parse(userToken[0], &userDto); if err != nil {
-			plug.Response(c, http.StatusBadRequest, "err token")
-			return
-		}
+	err := jwtToken.Parse(userToken[0][7:], &userDto); if err != nil {
+		plug.Response(c, http.StatusBadRequest, "err token")
+		return
+	}
 
-		UserStorage := storage.NewUserStorage(f.client, f.logger);
+	UserStorage := storage.NewUserStorage(f.client, f.logger);
 		
-		userModel := &model.User{
-			Email: userDto.Email,
-		}
-		err = UserStorage.FindUserByEmail(context.TODO(), userModel); if err != nil {
-			plug.Response(c, http.StatusBadRequest, err.Error())
-			return
-		}
+	userModel := &model.User{
+		Email: userDto.Email,
+	}
+	err = UserStorage.FindUserByEmail(context.TODO(), userModel); if err != nil {
+		plug.Response(c, http.StatusBadRequest, err.Error())
+		return
+	}
 
-		f.Dto.FolderName = c.PostForm("folderName")
+	f.Dto.FolderName = c.PostForm("folder_name")
 		
-		newfolder := service.NewFolder()
-		newFile := service.NewGenesisFile()
+	newfolder := service.NewFolder()
+	newFile := service.NewGenesisFile()
 
-		f.Model = model.Folder{
-			Name: f.Dto.FolderName,
-			Addres: newfolder.Addres,
-			File: newFile.Hash,
-			UserId: userDto.ID,
-			// UserId: userControl.ID,
-			Access: false,
-		}
+	f.Model = model.Folder{
+		Name: f.Dto.FolderName,
+		Addres: newfolder.Addres,
+		File: newFile.Hash,
+		UserId: userDto.ID,
+		// UserId: userControl.ID,
+		Access: false,
+	}
 
 		// save 
 		folderStg := storage.NewFolderStorage(f.client, f.logger)

@@ -30,7 +30,7 @@ import (
 // == BODY ==
 // title  			type	string
 // file				type	[]byte
-// address			type	string
+// folder_address	type	string
 // ------------------------------------
 // RESPONSE
 // Content-Type [application/json]
@@ -47,10 +47,15 @@ import (
 func (f *filechain) Add(c *gin.Context){
 	userToken := c.Request.Header["Authorization"]
 
+	if len(userToken) < 1 {
+		plug.Response(c, http.StatusBadRequest, "not fount token, plass auth")
+	}
+	
 	userDto := dto.User{}
 	
 	jwtToken := token.NewToken(f.config.Token.Key)
-	err := jwtToken.Parse(userToken[0], &userDto); if err != nil {
+	
+	err := jwtToken.Parse(userToken[0][7:], &userDto); if err != nil {
 		plug.Response(c, http.StatusBadRequest, "err token")
 		return
 	}
@@ -73,8 +78,8 @@ func (f *filechain) Add(c *gin.Context){
 		plug.Response(c, http.StatusBadRequest, "Fill in correctly data")
 		return
 	}
-	f.Dto.Address = c.PostForm("email");
-	f.Dto.Address = c.PostForm("title");
+	f.Dto.Title = c.PostForm("title");
+	f.Dto.Address = c.PostForm("folder_address");
 	folderStorage := storage.NewFolderStorage(f.client, f.logger)
 
 	// fmt.Printf("user id %v \n file address %v  end\n", userControl.ID, f.Dto.Address)
@@ -143,5 +148,4 @@ func (f *filechain) Add(c *gin.Context){
 	}
 
 	plug.Response(c, http.StatusOK, "saved")
-	return
 }

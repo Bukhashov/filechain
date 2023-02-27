@@ -87,4 +87,5 @@ def serve():
 
 if __name__ == "__main__":
     logging.basicConfig()
+    print("Server face recognition start api gRPC")
     serve()
