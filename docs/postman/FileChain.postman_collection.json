@@ -1,0 +1,207 @@
+{
+	"info": {
+		"_postman_id": "38c67fa9-a81d-4fa1-bddf-9f8c79eb1911",
+		"name": "FileChain",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "23632102"
+	},
+	"item": [
+		{
+			"name": "Sing up",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "img",
+							"type": "file",
+							"src": "/home/eric/Downloads/simba.jpg"
+						},
+						{
+							"key": "email",
+							"value": "SimbatS@mail.com",
+							"type": "text"
+						},
+						{
+							"key": "name",
+							"value": "Simbat",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{hostname}}/api/v1/auth/singup",
+					"host": [
+						"{{hostname}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"auth",
+						"singup"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Sing in",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "img",
+							"type": "file",
+							"src": "/home/eric/Downloads/simba.jpg"
+						},
+						{
+							"key": "email",
+							"value": "SimbatS@mail.com",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{hostname}}/api/v1/auth/singin",
+					"host": [
+						"{{hostname}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"auth",
+						"singin"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create folder",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "folder_name",
+							"value": "myTestFolder",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{hostname}}/api/v1/folder/create",
+					"host": [
+						"{{hostname}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"folder",
+						"create"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add file",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "title",
+							"value": "file_for_myFirstFolder",
+							"type": "text"
+						},
+						{
+							"key": "file",
+							"type": "file",
+							"src": "/home/eric/Downloads/Документ 10.pdf"
+						},
+						{
+							"key": "folder_address",
+							"value": "1q4Z44YfNHmsQiJuiKRL3AVfWUsBCCTyRb4oxyKhaG99FqHFb66VQBNjQUjLTvkyPZxwNP1B",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{hostname}}/api/v1/file/add",
+					"host": [
+						"{{hostname}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"file",
+						"add"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "hostname",
+			"value": "127.0.0.1:8000",
+			"type": "string"
+		},
+		{
+			"key": "token",
+			"value": "",
+			"type": "string"
+		}
+	]
+}

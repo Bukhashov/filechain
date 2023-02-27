@@ -3,8 +3,8 @@
 - URI path: [localhost]/api/[api_version]/
 - API version: v1
 
+- You can use already created postman collection
 ------------------------------------------------------------------------------------------
-
 ### Authorization
 
 <details>
